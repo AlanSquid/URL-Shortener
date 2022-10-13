@@ -2,6 +2,8 @@ const express = require('express')
 const mongoose = require('mongoose')
 const exphbs = require('express-handlebars')
 const bodyParser = require('body-parser')
+const shorten = require('./utility/shorten.js')
+const URL = require('./models/URL.js')
 
 // connect MongoDB
 async function main() {
@@ -27,8 +29,17 @@ app.get('/', (req, res) => {
 })
 
 app.post('/', (req, res) => {
-  const sourceUrl = req.body.url
+  const sourceURL = req.body.sourceURL
+  URL.findOne({ sourceURL })
+    .lean()
+    .then(data => data ? data : URL.create({ sourceURL, shorten: shorten(5) }))
+    .then(data => res.render('index', { sourceURL, shorten: data.shorten }))
+    .catch(err => console.log(err))
 })
+
+// URL_PAIR.create({ sourceURL, shortURL })
+// console.log(sourceURL)
+// console.log(shortURL)
 
 app.listen(3000, () => {
   console.log(`App is listening on http://localhost:3000`)

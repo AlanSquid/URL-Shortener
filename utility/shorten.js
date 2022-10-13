@@ -1,8 +1,3 @@
-function generateShorURL() {
-  let shortURL = 'http://shorturl.herokuapp.com/' + generateRandomString(5)
-  return shortURL
-}
-
 function generateRandomString(stringLength) {
   const lowerCaseLetters = 'abcdefghijklmnopqrstuvwxyz'
   const upperCaseLetters = lowerCaseLetters.toUpperCase()
@@ -17,5 +12,5 @@ function generateRandomString(stringLength) {
   return randomString
 }
 
-console.log(shorten())
+module.exports = generateRandomString
 

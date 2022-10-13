@@ -1,8 +1,18 @@
+{{#if shorten}}
+<div class="container">
+  <h1>Success! Please use the link:</h1>
+  <a href="{{shorten}}" target="_blank">
+    <h4 class="shortURL">http://urlshortener.com/{{shorten}}</h4>
+  </a>
+</div>
+
+{{else}}
 <div class="container">
   <form action="/" method="POST">
     <div class="form-group">
-      <input type="url" name="url" placeholder="Input URL here" required>
+      <input type="url" name="sourceURL" placeholder="Input URL here" required>
       <button type="submit" class="btn btn-outline-primary">Shorten</button>
     </div>
   </form>
 </div>
+{{/if}}
