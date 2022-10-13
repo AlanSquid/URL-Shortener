@@ -5,6 +5,7 @@ const bodyParser = require('body-parser')
 const shorten = require('./utility/shorten.js')
 const URL = require('./models/URL.js')
 
+
 // connect MongoDB
 async function main() {
   await mongoose.connect(process.env.MONGODB_SHORTENER_URI)
@@ -30,16 +31,26 @@ app.get('/', (req, res) => {
 
 app.post('/', (req, res) => {
   const sourceURL = req.body.sourceURL
+  const origin = req.headers.host
   URL.findOne({ sourceURL })
     .lean()
-    .then(data => data ? data : URL.create({ sourceURL, shorten: shorten(5) }))
-    .then(data => res.render('index', { sourceURL, shorten: data.shorten }))
+    .then(data => data ? data : URL.create({ sourceURL, shortURL: shorten(5) }))
+    .then(data => res.render('index', { sourceURL, shortURL: data.shortURL, origin }))
     .catch(err => console.log(err))
 })
 
-// URL_PAIR.create({ sourceURL, shortURL })
-// console.log(sourceURL)
-// console.log(shortURL)
+app.get('/:shortURL', (req, res) => {
+  const shortURL = req.params.shortURL
+  URL.findOne({ shortURL })
+    .lean()
+    .then(data => {
+      if (!data) {
+        res.render('error', { errorURL: `http://${req.headers.host}/${shortURL}` })
+      } else {
+        res.redirect(data.sourceURL)
+      }
+    })
+})
 
 app.listen(3000, () => {
   console.log(`App is listening on http://localhost:3000`)
