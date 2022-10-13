@@ -1,18 +1,29 @@
 {{#if shortURL}}
 <div class="container">
+  <small>(click img to back)</small>
   <h1>Success! Please use the link:</h1>
-  <a href="{{sourceURL}}" target="_blank">
+  <a class="d-flex" href="{{sourceURL}}" target="_blank">
     <h4 class="shortURL">http://{{origin}}/{{shortURL}}</h4>
   </a>
+  {{!-- 複製連結按鈕 --}}
+  <button class="btn btn-primary ms-3" onclick="copyURL()">Copy</button>
 </div>
 
 {{else}}
 <div class="container">
   <form action="/" method="POST">
     <div class="form-group">
+      {{!-- input添加required為必填項目 --}}
       <input type="url" name="sourceURL" placeholder="Input URL here" required>
       <button type="submit" class="btn btn-outline-primary">Shorten</button>
     </div>
   </form>
 </div>
 {{/if}}
+
+<script>
+  function copyURL() {
+    const url = document.querySelector('.shortURL')
+    navigator.clipboard.writeText(url.textContent)
+  }
+</script>
